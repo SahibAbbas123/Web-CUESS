@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import Navbar from "../components/Navbar";
 import { ToastProvider } from "../components/ui/use-toast";
 import { Toaster } from "../components/ui/toaster";
+import ThemeToggle from "@/components/ThemeToggle";
 
 export const metadata: Metadata = {
   title: "CUESS",
@@ -16,6 +17,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ToastProvider>
           <Navbar />
           {children}
+          {/* <ThemeToggle /> */}
           <Toaster />
         </ToastProvider>
       </body>

@@ -1,70 +1,45 @@
-'use client';
+"use client";
 
-import { useMemo, useState } from 'react';
-import TeamCard from '../team/TeamCard';
-import Section from '../Section';
-import { team, Member, TeamRole } from '../../data/team';
+import Section from "../Section";
+import TeamCard from "../team/TeamCard";
+import { useState } from "react";
+import { team } from "../../data/team";
 
-const TABS: { key: TeamRole; label: string }[] = [
-  { key: 'founder', label: 'Founder' },
-  { key: 'president', label: 'Presidents' },
-  { key: 'advisor', label: 'Advisors' },
-  { key: 'gb', label: 'GB Board' },
-  { key: 'director', label: 'Directors' },
-];
+const tabs = Object.keys(team) as Array<keyof typeof team>;
 
 export default function TeamSection() {
-  const [active, setActive] = useState<TeamRole>('founder');
-
-  const filtered: Member[] = useMemo(
-    () => team.filter((m) => m.role === active),
-    [active]
-  );
+  const [active, setActive] = useState<keyof typeof team>("Founder");
 
   return (
-    <Section id="team" className="pt-20 md:pt-28">
-      <div className="mx-auto max-w-6xl px-4">
-        <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight">Meet Our Team</h2>
+    <Section id="team" className="scroll-mt-28">
+      <div className="mx-auto max-w-7xl px-4 md:px-8">
+        <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight">Meet Our Team</h2>
 
         {/* Tabs */}
-        <div className="mt-6 flex gap-3 overflow-x-auto pb-2">
-          {TABS.map((t) => {
-            const is = t.key === active;
-            return (
-              <button
-                key={t.key}
-                onClick={() => setActive(t.key)}
-                className={[
-                  'whitespace-nowrap rounded-full px-6 py-2 text-sm font-medium ring-1 transition',
-                  is
-                    ? 'bg-[#0B65FF] text-white ring-[#0B65FF] shadow-[0_6px_24px_-8px_rgba(11,101,255,.6)]'
-                    : 'bg-white text-zinc-700 ring-black/10 hover:bg-zinc-50',
-                ].join(' ')}
-                aria-current={is ? 'page' : undefined}
-              >
-                {t.label}
-              </button>
-            );
-          })}
+        <div className="mt-6 flex flex-wrap gap-3">
+          {tabs.map((t) => (
+            <button
+              key={t}
+              onClick={() => setActive(t)}
+              className={[
+                "rounded-full border px-4 py-2 transition",
+                active === t
+                  ? "bg-blue-600 text-white shadow-[0_6px_30px_-10px_rgba(37,99,235,.7)]"
+                  : "bg-white/70 backdrop-blur border-slate-200 hover:bg-white",
+              ].join(" ")}
+            >
+              {t}
+            </button>
+          ))}
         </div>
 
-        {/* Carousel */}
-        <div className="mt-8 relative">
-          <div className="overflow-x-auto snap-x snap-mandatory [-ms-overflow-style:none] [scrollbar-width:none]">
-            <div className="flex gap-6 pr-4">
-              {filtered.length > 0 ? (
-                filtered.map((m) => <TeamCard key={m.id} m={m} />)
-              ) : (
-                <div className="w-full py-16 text-center text-zinc-500">
-                  No entries yet for <span className="font-medium">{TABS.find(t => t.key===active)?.label}</span>.
-                </div>
-              )}
-            </div>
+        {/* Horizontal scroller */}
+        <div className="mt-8 overflow-x-auto no-scrollbar pb-2 [-webkit-overflow-scrolling:touch]">
+          <div className="flex gap-6 pr-6">
+            {team[active].map((m) => (
+              <TeamCard key={m.name} {...m} />
+            ))}
           </div>
-
-          {/* gradient edges */}
-          <div className="pointer-events-none absolute inset-y-0 left-0 w-10 bg-gradient-to-r from-white to-transparent" />
-          <div className="pointer-events-none absolute inset-y-0 right-0 w-10 bg-gradient-to-l from-white to-transparent" />
         </div>
       </div>
     </Section>

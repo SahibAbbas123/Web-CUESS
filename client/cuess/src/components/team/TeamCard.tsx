@@ -1,54 +1,46 @@
-'use client';
+"use client";
 
-import Image from 'next/image';
-import { motion, useMotionValue, useTransform } from 'framer-motion';
-import type { Member } from '../../data/team';
+import Image from "next/image";
+import { motion } from "framer-motion";
 
-type Props = { m: Member };
+type Props = {
+  name: string;
+  role: string;
+  photo: string; // /public path or remote
+};
 
-export default function TeamCard({ m }: Props) {
-  // Lighter, GPU-friendly tilt (no backdrop-blur)
-  const mx = useMotionValue(0);
-  const my = useMotionValue(0);
-  const rX = useTransform(my, [-30, 30], [5, -5]); // smaller range
-  const rY = useTransform(mx, [-30, 30], [-5, 5]);
-
-  function onMove(e: React.MouseEvent) {
-    const el = e.currentTarget as HTMLElement;
-    const r = el.getBoundingClientRect();
-    mx.set(((e.clientX - r.left) / r.width) * 60 - 30);
-    my.set(((e.clientY - r.top) / r.height) * 60 - 30);
-  }
-  function onLeave() { mx.set(0); my.set(0); }
-
+export default function TeamCard({ name, role, photo }: Props) {
   return (
     <motion.article
-      onMouseMove={onMove}
-      onMouseLeave={onLeave}
-      style={{ rotateX: rX, rotateY: rY, willChange: 'transform' }}
-      className="group relative h-[440px] w-[300px] shrink-0 snap-start overflow-hidden rounded-3xl bg-zinc-100 ring-1 ring-black/5 shadow-[0_20px_50px_-20px_rgba(0,0,0,.25)]"
+      whileHover={{ y: -6 }}
+      className="group relative h-[420px] w-[290px] md:h-[520px] md:w-[360px] shrink-0 overflow-hidden rounded-[28px] border bg-white shadow-sm"
     >
       <Image
-        src={m.photo}
-        alt={m.name}
+        src={photo}
+        alt={name}
         fill
         className="object-cover"
-        sizes="(max-width:768px) 80vw, 300px"
+        sizes="(max-width: 768px) 290px, 360px"
         priority={false}
       />
 
-      {/* Always-on gradient (no blur) */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/25 to-transparent" />
+      {/* Frost gradient (no heavy blur) */}
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
 
-      {/* Frosted-ish slab (semi-opaque + subtle ring) */}
-      <div className="absolute bottom-4 left-4 right-4 rounded-2xl bg-white/18 ring-1 ring-white/35 shadow-[0_10px_30px_-12px_rgba(0,0,0,.4)] backdrop-saturate-150 transition-transform duration-300 group-hover:translate-y-[-2px]">
-        <div className="px-5 py-4">
-          <h3 className="text-white text-lg font-semibold drop-shadow-[0_1px_1px_rgba(0,0,0,.35)]">
-            {m.name}
-          </h3>
-          <p className="text-white/90 text-sm">{m.title}</p>
-        </div>
+      {/* Label pill on image */}
+      <div className="absolute inset-x-4 bottom-4 rounded-2xl bg-white/75 p-4 backdrop-blur-sm ring-1 ring-white/60 shadow-[0_10px_40px_-10px_rgba(0,0,0,.35)]">
+        <h4 className="text-base md:text-lg font-semibold text-slate-900">{name}</h4>
+        <p className="text-sm md:text-base text-slate-600">{role}</p>
       </div>
+
+      {/* subtle parallax on hover */}
+      <motion.div
+        aria-hidden
+        className="absolute inset-0"
+        initial={{ opacity: 0 }}
+        whileHover={{ opacity: 1 }}
+        transition={{ duration: 0.3 }}
+      />
     </motion.article>
   );
 }
