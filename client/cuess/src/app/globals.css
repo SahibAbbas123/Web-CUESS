@@ -2,18 +2,30 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Hide scrollbars but keep scrollability */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
 /* globals.css */
 html {
   scroll-behavior: smooth;
 }
 :root {
-  --bg: #f9fafb;
-  --brand: #0066ff;
+  --card: #ffffff;
+  --bg: #f6f7f9;
+  --ink: #111827;
+  --text-default: #1c1c1e; /* Default text color */
+}
+.dark:root {
+  --card: #0f1523;
+  --bg: #0b0f1a;
+  --ink: #e5e7eb;
+  --text-default: #e5e7eb; /* Light text for dark mode */
 }
 html,
 body {
   background: var(--bg);
-  color: #1c1c1e;
+  color: var(--text-default);
   overflow-x: hidden;
 }
 
@@ -31,11 +43,10 @@ body {
     #f9fafb;
 }
 .glass {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.6);
+  background: color-mix(in oklab, var(--card) 85%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid color-mix(in oklab, #fff 50%, transparent);
 }
 
 .skeleton {
@@ -97,4 +108,23 @@ body {
 }
 .chips {
   @apply overflow-x-auto flex gap-2 pb-2 -mx-2 px-2;
+}
+
+/* Ensure all texts become white or similar shade in dark mode */
+/* Apply the text color globally */
+body {
+  color: var(--text-default);
+}
+
+/* Override specific cases where text should not change */
+/* Add exceptions here if needed */
+
+/* Ensure About CUESS and Mission & Vision texts are black in dark mode */
+.about-cuess, .mission-vision {
+  color: #111827; /* Black */
+}
+
+/* Ensure tab names/texts in Meet Our Team are visible in dark mode */
+.tab-name {
+  color: var(--text-default); /* Use default text color */
 }

@@ -8,6 +8,7 @@ import VideoSplash from "@/VideoModal";
 import JourneySection from "@/components/sections/JourneySection";
 import VideoIntroSection from "@/components/sections/VideoIntroSection";
 import HeroSection from "@/components/sections/HeroSection";
+import Footer from "@/components/Footer";
 
 export default function Page() {
   return (
@@ -21,6 +22,7 @@ export default function Page() {
       <EventsSection />
       <TeamSection />
       <MembershipSection />
+      <Footer />
     </main>
   );
 }

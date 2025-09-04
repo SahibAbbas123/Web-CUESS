@@ -141,6 +141,13 @@ export default function WhatWeDoSection() {
           ))}
         </motion.ul>
       </div>
+
+      <style jsx>{`
+        /* Ensure titles and h3 tags in WhatWeDoSection retain their light mode color */
+        h3 {
+          color: inherit; /* Retain light mode color */
+        }
+      `}</style>
     </Section>
   );
 }

@@ -50,7 +50,7 @@ export default function MembershipSection() {
 
         {/* Benefits (fills the space on desktop; stacks on mobile) */}
         <div className="rounded-3xl border bg-white p-6">
-          <h3 className="text-lg font-semibold">Why Join?</h3>
+          <h3 className="text-lg font-semibold why-join">Why Join?</h3>
           <ul className="mt-4 grid gap-3">
             {[
               "Mentorship from founders & alumni",

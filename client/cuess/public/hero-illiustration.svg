@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1600" height="1100" viewBox="0 0 1600 1100" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="g1" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#8AF2C8"/>
+      <stop offset="1" stop-color="#1E63FF" stop-opacity=".25"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="1100" fill="white"/>
+  <circle cx="1400" cy="120" r="420" fill="url(#g1)" opacity=".25"/>
+  <!-- laptop base -->
+  <rect x="350" y="720" rx="24" ry="24" width="900" height="56" fill="#0B1220" opacity=".08"/>
+  <rect x="420" y="360" width="560" height="360" rx="20" fill="#F5F7FA" stroke="#E6EAF0"/>
+  <rect x="430" y="370" width="540" height="300" rx="14" fill="#EAF2FF"/>
+  <rect x="520" y="695" width="360" height="20" rx="10" fill="#CBD5E1"/>
+  <!-- rocket -->
+  <g transform="translate(1100,410)">
+    <path d="M100,0 C160,70 180,150 150,240 L50,240 C20,150 40,70 100,0 Z" fill="#FF5C8A"/>
+    <circle cx="100" cy="100" r="32" fill="#FFE6EE"/>
+    <path d="M50,240 L150,240 L150,280 C120,300 80,300 50,280 Z" fill="#FFA94D"/>
+    <path d="M40,190 C20,220 10,250 20,280 L-30,250 Z" fill="#47E1AF"/>
+    <path d="M160,190 C180,220 190,250 180,280 L230,250 Z" fill="#47E1AF"/>
+  </g>
+  <!-- confetti dots -->
+  <circle cx="320" cy="430" r="6" fill="#1E63FF" opacity=".6"/>
+  <circle cx="360" cy="520" r="6" fill="#8AF2C8" opacity=".6"/>
+  <circle cx="300" cy="600" r="6" fill="#1E63FF" opacity=".6"/>
+</svg>
