@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 
-type FormState = {
+type SubmitState = "idle" | "submitting" | "success" | "error";
+
+type FormDataShape = {
   name: string;
   email: string;
   yearDept: string;
@@ -10,48 +12,64 @@ type FormState = {
 };
 
 export default function MembershipSection() {
-  const [form, setForm] = useState<FormState>({
+  const [state, setState] = useState<SubmitState>("idle");
+  const [msg, setMsg] = useState<string>("");
+  const [form, setForm] = useState<FormDataShape>({
     name: "",
     email: "",
     yearDept: "",
     message: "",
   });
-  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">(
-    "idle"
-  );
-  const [errorMsg, setErrorMsg] = useState<string>("");
 
-  const API =
-    process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") || "http://localhost:4000";
+  // Prefer env; fall back to localhost for dev
+  const API_BASE =
+    process.env.NEXT_PUBLIC_API_BASE?.replace(/\/$/, "") ||
+    "http://localhost:4000";
 
-  async function onSubmit(e: React.FormEvent) {
+  const onChange =
+    (key: keyof FormDataShape) =>
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      setForm((prev) => ({ ...prev, [key]: e.target.value }));
+    };
+
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setStatus("loading");
-    setErrorMsg("");
+    setState("submitting");
+    setMsg("");
 
     try {
-      const res = await fetch(`${API}/api/memberships`, {
+      const res = await fetch(`${API_BASE}/api/memberships`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
 
       if (!res.ok) {
-        const t = await res.text();
-        throw new Error(t || `Request failed (${res.status})`);
+        // try to parse server message; stay type-safe
+        let serverMsg = "Submission failed.";
+        try {
+          const data = (await res.json()) as { error?: string };
+          if (data?.error) serverMsg = data.error;
+        } catch {
+          /* ignore JSON parse errors */
+        }
+        throw new Error(serverMsg);
       }
 
-      setStatus("success");
-      // clear only after success
+      setState("success");
+      setMsg("Form submitted successfully!");
       setForm({ name: "", email: "", yearDept: "", message: "" });
-    } catch (err: any) {
-      setStatus("error");
-      setErrorMsg(err?.message || "Something went wrong");
-    } finally {
-      // auto-hide status after a bit
-      setTimeout(() => setStatus("idle"), 4000);
+
+      // auto-hide success after a short delay
+      window.setTimeout(() => setState("idle"), 3500);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Something went wrong.";
+      setState("error");
+      setMsg(message);
+      // auto-hide error after a short delay
+      window.setTimeout(() => setState("idle"), 4000);
     }
-  }
+  };
 
   return (
     <section id="join" className="scroll-mt-24 py-16 md:py-24">
@@ -74,10 +92,11 @@ export default function MembershipSection() {
                   Name
                 </label>
                 <input
-                  className="block w-full rounded-2xl border border-zinc-200 bg-white px-4 py-3 text-zinc-900 outline-none ring-0 placeholder:text-zinc-400 focus:border-zinc-300 focus:shadow-[0_0_0_4px_rgba(0,102,255,.08)]"
+                  name="name"
                   value={form.name}
-                  onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  onChange={onChange("name")}
                   required
+                  className="block w-full rounded-2xl border border-zinc-200 bg-white px-4 py-3 text-zinc-900 outline-none placeholder:text-zinc-400 focus:border-zinc-300 focus:shadow-[0_0_0_4px_rgba(11,99,255,.08)]"
                 />
               </div>
 
@@ -87,10 +106,11 @@ export default function MembershipSection() {
                 </label>
                 <input
                   type="email"
-                  className="block w-full rounded-2xl border border-zinc-200 bg-white px-4 py-3 text-zinc-900 outline-none ring-0 placeholder:text-zinc-400 focus:border-zinc-300 focus:shadow-[0_0_0_4px_rgba(0,102,255,.08)]"
+                  name="email"
                   value={form.email}
-                  onChange={(e) => setForm({ ...form, email: e.target.value })}
+                  onChange={onChange("email")}
                   required
+                  className="block w-full rounded-2xl border border-zinc-200 bg-white px-4 py-3 text-zinc-900 outline-none placeholder:text-zinc-400 focus:border-zinc-300 focus:shadow-[0_0_0_4px_rgba(11,99,255,.08)]"
                 />
               </div>
 
@@ -99,9 +119,10 @@ export default function MembershipSection() {
                   Year / Dept
                 </label>
                 <input
-                  className="block w-full rounded-2xl border border-zinc-200 bg-white px-4 py-3 text-zinc-900 outline-none ring-0 placeholder:text-zinc-400 focus:border-zinc-300 focus:shadow-[0_0_0_4px_rgba(0,102,255,.08)]"
+                  name="yearDept"
                   value={form.yearDept}
-                  onChange={(e) => setForm({ ...form, yearDept: e.target.value })}
+                  onChange={onChange("yearDept")}
+                  className="block w-full rounded-2xl border border-zinc-200 bg-white px-4 py-3 text-zinc-900 outline-none placeholder:text-zinc-400 focus:border-zinc-300 focus:shadow-[0_0_0_4px_rgba(11,99,255,.08)]"
                 />
               </div>
 
@@ -110,21 +131,21 @@ export default function MembershipSection() {
                   Why do you want to join?
                 </label>
                 <textarea
+                  name="message"
                   rows={4}
-                  className="block w-full resize-y rounded-2xl border border-zinc-200 bg-white px-4 py-3 text-zinc-900 outline-none ring-0 placeholder:text-zinc-400 focus:border-zinc-300 focus:shadow-[0_0_0_4px_rgba(0,102,255,.08)]"
                   value={form.message}
-                  onChange={(e) => setForm({ ...form, message: e.target.value })}
+                  onChange={onChange("message")}
+                  className="block w-full resize-y rounded-2xl border border-zinc-200 bg-white px-4 py-3 text-zinc-900 outline-none placeholder:text-zinc-400 focus:border-zinc-300 focus:shadow-[0_0_0_4px_rgba(11,99,255,.08)]"
                 />
               </div>
 
-              {/* Actions + statuses */}
               <div className="flex flex-wrap items-center gap-3 pt-2">
                 <button
                   type="submit"
-                  disabled={status === "loading"}
-                  className="inline-flex items-center justify-center rounded-2xl bg-[#0B63FF] px-5 py-3 font-semibold text-white shadow-[0_8px_24px_-8px_rgba(11,99,255,.55)] transition-all hover:brightness-[1.05] disabled:cursor-not-allowed disabled:opacity-70"
+                  disabled={state === "submitting"}
+                  className="inline-flex items-center justify-center rounded-2xl bg-[#0B63FF] px-5 py-3 font-semibold text-white shadow-[0_8px_24px_-8px_rgba(11,99,255,.55)] transition-all hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-70"
                 >
-                  {status === "loading" ? "Submitting…" : "Submit"}
+                  {state === "submitting" ? "Submitting…" : "Submit"}
                 </button>
 
                 <a
@@ -134,14 +155,14 @@ export default function MembershipSection() {
                   Explore Events
                 </a>
 
-                {status === "success" && (
+                {state === "success" && (
                   <span className="ml-1 text-sm font-medium text-emerald-600">
-                    Form submitted successfully!
+                    {msg}
                   </span>
                 )}
-                {status === "error" && (
+                {state === "error" && (
                   <span className="ml-1 text-sm font-medium text-rose-600">
-                    {errorMsg || "Submission failed."}
+                    {msg}
                   </span>
                 )}
               </div>
