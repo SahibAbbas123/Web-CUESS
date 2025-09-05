@@ -1,0 +1,33 @@
+{
+  "name": "cuess-server",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate deploy",
+    "prisma:push": "prisma db push"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.22.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.6.1",
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.1.5",
+    "helmet": "^7.1.0",
+    "nodemailer": "^6.10.1",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
+    "@types/node": "^24.3.1",
+    "@types/nodemailer": "^7.0.1",
+    "prisma": "^5.22.0",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.17.0",
+    "typescript": "^5.9.2"
+  }
+}
