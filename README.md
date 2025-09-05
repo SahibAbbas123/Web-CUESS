@@ -1,99 +1,157 @@
-# CUESS — Chittagong University Entrepreneur & Startup Society
+# CUESS – Chittagong University Entrepreneur & Startup Society
 
-Modern, lightweight site for CUESS built with **Next.js (App Router)** + **Tailwind CSS**.  
-Focus: clean UX, frosted-glass visuals, smooth performance on mobile and desktop.
+The official website for the Chittagong University Entrepreneur & Startup Society (CUESS) is built with a modern, lightweight technology stack to empower student entrepreneurs through events, mentorship, and community engagement.
 
-## ✨ Features
+## Technology Stack
 
-- **Sticky frosted-pill navbar**  
-  - Active-section highlight, smooth hash scrolling  
-  - Desktop: inline section buttons  
-  - Mobile: compact pill with **hamburger menu**
-- **Hero + clear CTAs** (Join, Learn)  
-- **About** split-screen layout with image + quote pill  
-- **Journey / Timeline** section (zig-zag, eye-guided layout)  
-- **Events**  
-  - **Past** and **Upcoming** in horizontal carousels (no vertical stacking)  
-- **Team**  
-  - Category tabs (Founder, Presidents, Advisors, GB, Directors)  
-  - **Premium cards**: image with gradient overlay, frosty label, subtle parallax hover  
-  - Data modeled for easy migration to a `data/` source or CMS
-- **Membership**  
-  - Clean form, toast feedback (optional), smooth scroll to section
-- **Design System**  
-  - **Glassmorphism** (tasteful, lightweight)  
-  - **Light mode**, blue/white with **mint accents**  
-  - Variable/modern typography (bold headlines, airy body text)  
-  - Hover micro-interactions; reveal/stagger in key places
+- **Frontend**: Next.js, React, TailwindCSS, shadcn/ui, Framer Motion
+- **Backend**: Node.js, Express, Prisma
+- **Database**: PostgreSQL (via NeonDB)
+- **Email**: Nodemailer (Gmail App Password)
 
-## 🧰 Tech Stack
+## Features
 
-- **Next.js** (App Router), **React**  
-- **Tailwind CSS v4** (PostCSS)  
-- **Framer Motion** (subtle reveals/parallax)  
-- **Lucide Icons / Radix primitives** (where relevant)  
-- Static-compatible (can export for GitHub Pages), ideal on **Vercel**
+### Current Features
+- **Hero Section**: Responsive call-to-action buttons and visuals.
+- **About Section**: Split-screen layout highlighting mission and vision.
+- **What We Do**: Interactive cards with staggered animations.
+- **Events Section**: Tabs for past and upcoming events with a carousel layout.
+- **Team Section**: Interactive cards for Founder, Presidents, Advisors, GB Board, and Directors.
+- **Membership Form**:
+  - Connected to backend and NeonDB.
+  - Stores submissions in the database.
+  - Sends confirmation emails to applicants.
+  - Displays success/failure messages.
+- **Sticky Navbar**: Supports desktop and mobile (hamburger menu).
+- **Footer**: Includes contact information, links, and phone number.
+- **Responsive Design**: No horizontal scrollbars with full scrollability.
 
----
+### Planned Features (Roadmap)
+- Global dark mode toggle.
+- Admin dashboard for membership management.
+- Email templates for event announcements.
+- Optimized database schema for events and startup showcases.
+- Middleware for rate-limiting and spam protection.
+- Enhanced mobile UI/UX.
+- Advanced security (Helmet, CORS, input validation).
+- CI/CD pipelines with Vercel (frontend) and Railway/Heroku/Render (backend).
 
-## 📂 Repository Structure
+## File Structure
 
 ```
-WebCUESS/
-├─ client/
-│  └─ cuess/                    # Next.js frontend
-│     ├─ src/
-│     │  ├─ app/                # App Router pages/layouts
-│     │  ├─ components/         # UI + sections (Navbar, Hero, Team, Events, etc.)
-│     │  ├─ data/               # Hardcoded data (team, events) for now
-│     │  ├─ hooks/              # Client hooks (e.g., useIntersection)
-│     │  ├─ lib/                # Helpers (cn, utils)
-│     │  └─ VideoModal.tsx      # YouTube/local modal
-│     ├─ public/
-│     │  ├─ cuess_logo.png      # Logo (also used for favicon/icon)
-│     │  └─ …assets
-│     ├─ next.config.ts         # Export config, image domains
-│     ├─ tailwind.config.ts
-│     ├─ postcss.config.(js|mjs)
-│     ├─ package.json
-│     └─ README.md              # Client-specific notes (optional)
-└─ README.md                    # (this file)
+WebCUESS
+├── client/                 # Frontend
+│   └── cuess/
+│       ├── public/         # Static assets (logo, icons, images)
+│       ├── src/
+│       │   ├── app/        # Next.js App Router (pages, layout, globals)
+│       │   ├── components/ # UI components, sections, team cards, nav, footer
+│       │   ├── data/       # Static data (events, team)
+│       │   ├── hooks/      # Custom React hooks
+│       │   └── lib/        # Utilities (scroll, cn, events)
+│       ├── package.json
+│       └── tailwind.config.ts
+├── server/                 # Backend
+│   ├── prisma/             # Prisma schema
+│   │   └── schema.prisma
+│   ├── src/
+│   │   ├── routes/         # Express routes
+│   │   │   └── membership.ts
+│   │   ├── email.ts        # Nodemailer setup
+│   │   ├── env.ts          # Zod-validated environment variables
+│   │   ├── index.ts        # Express app entry
+│   │   └── prisma.ts       # Prisma client
+│   ├── package.json
+│   └── tsconfig.json
+└── README.md
 ```
-> You will later add `server/` at the root for backend APIs.
 
----
+## Setup Instructions
 
-## 🚀 Installation
-
-1. **Add remote (if not already):**
-   ```bash
-   git remote add origin https://github.com/SahibAbbas123/Web-CUESS.git
-   ```
-2.	**Clone the repository:**
-   ```
-   git clone https://github.com/SahibAbbas123/Web-CUESS.git
-   ```
-3. **Navigate to the project directory:**
-```
+### 1. Clone the Repository
+```bash
+git clone https://github.com/SahibAbbas123/Web-CUESS.git
 cd WebCUESS
 ```
-4.	**Install dependencies (root has no deps; install in client):**
-   ```
+
+### 2. Frontend Setup
+```bash
 cd client/cuess
 npm install
+npm run dev
 ```
-5. **Run the client (dev server):**
+The frontend runs at: `http://localhost:3000`
+
+### 3. Backend Setup
+```bash
+cd server
+npm install
+```
+
+#### Configure Environment
+Create a `.env` file in the `server/` directory with the following:
+```
+DATABASE_URL="postgresql://...@neon.tech/neondb?sslmode=require"
+PORT=4000
+CLIENT_ORIGIN=http://localhost:3000
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=465
+SMTP_SECURE=true
+SMTP_USER=your-email@gmail.com
+SMTP_PASS=your-gmail-app-password
+FROM_EMAIL=your-email@gmail.com
+ADMIN_EMAIL=admin-email@gmail.com
+```
+
+#### Push Prisma Schema
+```bash
+npx prisma generate
+npx prisma db push
+```
+
+#### Start Backend
+```bash
+npm run dev
+```
+The backend runs at: `http://localhost:4000`
+
+## Current Status
+- **Frontend**: Fully functional (Next.js).
+- **Backend**: Operational (Express + Prisma).
+- **Database**: Connected (NeonDB).
+- **Membership Form**: Stores submissions and sends confirmation emails.
+
+## Contributing
+
+1. Create a feature branch:
+   ```bash
+   git checkout -b feature/<feature-name>
    ```
-   npm run dev
+
+2. Commit changes:
+   ```bash
+   git add .
+   git commit -m "feat: <meaningful message>"
    ```
-## 🤝 Contributing
 
-PRs welcome!
-	•	Keep PRs focused (one feature/fix).
-	•	Follow project conventions (Tailwind utility-first, small React components).
+3. Push the branch:
+   ```bash
+   git push origin feature/<feature-name>
+   ```
 
-⸻
+4. Open a Pull Request on GitHub.
 
-## 📄 License
+## Git Commands for Current Workflow
+```bash
+# Stage changes
+git add .
 
-MIT © CUESS / Contributors
+# Commit with a clear message
+git commit -m "docs: update README with professional structure and clarity"
+
+# Push to your feature branch
+git push origin <your-branch-name>
+```
+
+After pushing, create a Pull Request on GitHub and merge/rebase into the `main` branch.
+
