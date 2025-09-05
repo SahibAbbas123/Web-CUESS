@@ -4,9 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { scrollToId } from "../lib/scrollToId";
 
-const HERO_IMG =
-  "https://images.unsplash.com/photo-1529336953121-a1d0d9990fda?q=80&w=1600&auto=format&fit=crop"; // clean, brand-friendly placeholder
-
 export default function Hero() {
   return (
     <section id="home" className="relative">
