@@ -1,5 +1,6 @@
 import GlassCard from "./GlassCard";
 import { Button } from "./ui/button";
+import Image from "next/image";
 
 export default function EventCard({
   title,
@@ -14,7 +15,7 @@ export default function EventCard({
     <GlassCard className="p-4">
       <div className="overflow-hidden rounded-xl mb-4 bg-muted h-40">
         {poster ? (
-          <img
+          <Image
             src={poster}
             alt={title}
             className="w-full h-full object-cover hover:scale-105 transition"
